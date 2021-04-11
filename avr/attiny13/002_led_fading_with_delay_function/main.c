@@ -7,7 +7,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define	LED_PIN		PB0
+#define	LED_PIN		PB2
 #define DELAY_MAX 	(512)
 #define	DELAY_MIN	(1)
 
@@ -25,16 +25,16 @@ main(void)
 	uint8_t dir = 0;
 
 	/* setup */
-	DDRB = 0b00000001; // set LED pin as OUTPUT
-	PORTB = 0b00000001; // set LED pin to HIGH
+	DDRB = 0b00000100; // set LED pin as OUTPUT
+	PORTB = 0b00000100; // set LED pin to HIGH
 
 	/* loop */
 	while (1) {
 
-		PORTB &= ~(_BV(LED_PIN)); // LED off
+		PORTB &= ~(1<<2); // LED off
                 _delay_loop_2(delay);
 
-                PORTB |= _BV(LED_PIN); // LED on
+                PORTB |= (1<<2); // LED on
                 _delay_loop_2(DELAY_MAX - delay);
 
                 if (dir) { // fade-in
@@ -42,6 +42,5 @@ main(void)
                 } else { // fade-out
                         if (--delay <= DELAY_MIN) dir = 1;
                 }
-
 	}
 }
