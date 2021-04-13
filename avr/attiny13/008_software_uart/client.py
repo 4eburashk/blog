@@ -9,7 +9,7 @@ class Client:
 	def __init__(self, port="/dev/ttyUSB0"):
 		self.port = serial.Serial(
         		port=port,
-        		baudrate=15200,
+        		baudrate=115200,
         		stopbits=serial.STOPBITS_ONE,
         		bytesize=serial.EIGHTBITS)
 

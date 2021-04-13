@@ -24,7 +24,7 @@
 #endif  /* !UART_RX */
 
 #if (defined(UART_TX_ENABLED) || defined(UART_RX_ENABLED)) && !defined(UART_BAUDRATE)
-# define        UART_BAUDRATE   (15200)
+# define        UART_BAUDRATE   (115200)
 #endif  /* !UART_BAUDRATE */
 
 #define	TXDELAY         	(int)(((F_CPU/UART_BAUDRATE)-7 +1.5)/3)
