@@ -19,7 +19,7 @@ prng_lfsr16(void) {
 int main(void) {
 	/* setup */
 	DDRB = 0b00000100; // set LED pin as OUTPUT
-	PORTB = 0xFF; // set all pins to LOW
+	PORTB = 0x00; // set all pins to LOW
 	/* loop */
 	while (1) {
 		if (prng_lfsr16() & 1) {

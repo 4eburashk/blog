@@ -10,8 +10,8 @@ CC=avr-gcc
 LD=avr-ld
 OBJCOPY=avr-objcopy
 SIZE=avr-size
-AVRDUDE=avrdude
-CFLAGS=-std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I. -DUART_BAUDRATE=57600
+AVRDUDE=avrdude -C/etc/avrdude.conf -v
+CFLAGS=-std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I. -DUART_BAUDRATE=115200
 TARGET=main
 
 SRCS = main.c uart.c ir.c
@@ -23,10 +23,10 @@ all:
 	${SIZE} -C --mcu=${MCU} ${TARGET}.elf
 
 flash:
-	${AVRDUDE} -p ${MCU} -c usbasp -B10 -U flash:w:${TARGET}.hex:i -F -P usb
+	${AVRDUDE} -p ${MCU} -c usbasp -B32 -U flash:w:${TARGET}.hex:i -F -P/dev/ttyUSB0
 
 fuse:
-	$(AVRDUDE) -p ${MCU} -c usbasp -B10 -U hfuse:w:${FUSE_H}:m -U lfuse:w:${FUSE_L}:m
-	
+	$(AVRDUDE) -p ${MCU} -c usbasp -B32 -U hfuse:w:${FUSE_H}:m -U lfuse:w:${FUSE_L}:m
+
 clean:
 	rm -f *.c~ *.o *.elf *.hex

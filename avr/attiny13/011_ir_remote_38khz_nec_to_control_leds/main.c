@@ -46,24 +46,20 @@ uint8_t IR_proto_event = 0;
 uint8_t IR_index = 0;
 uint32_t IR_data = 0;
 
-static void
-IR_init()
-{
+static void IR_init() {
 	DDRB &= ~_BV(IR_IN_PIN); // set IR IN pin as INPUT
 	PORTB &= ~_BV(IR_IN_PIN); // set LOW level to IR IN pin
 	TCCR0A |= _BV(WGM01); // set timer counter mode to CTC
-        TCCR0B |= _BV(CS00); // set prescaler to 1
-        TIMSK0 |= _BV(OCIE0A); // enable Timer COMPA interrupt
-        OCR0A = IR_OCR0A; // set OCR0n to get ~38.222kHz timer frequency
+	TCCR0B |= _BV(CS00); // set prescaler to 1
+	TIMSK0 |= _BV(OCIE0A); // enable Timer COMPA interrupt
+	OCR0A = IR_OCR0A; // set OCR0n to get ~38.222kHz timer frequency
 	GIMSK |= _BV(INT0); // enable INT0 interrupt handler
 	MCUCR &= ~_BV(ISC01); // trigger INTO interrupt on raising and falling edge
 	MCUCR |= _BV(ISC00);
         sei(); // enable global interrupts
 }
 
-static int8_t
-IR_NEC_process(uint16_t counter, uint8_t value)
-{
+static int8_t IR_NEC_process(uint16_t counter, uint8_t value) {
 	int8_t retval = IR_ERROR;
 
 	switch(IR_proto_event) {
@@ -118,9 +114,7 @@ IR_NEC_process(uint16_t counter, uint8_t value)
 	return retval;
 }
 
-static void
-IR_process()
-{
+static void IR_process() {
 	uint8_t value;
 	uint16_t counter;
 
@@ -167,12 +161,9 @@ IR_process()
 	default:
 		break;
 	}
-
 }
 
-static int8_t
-IR_read(uint8_t *address, uint8_t *command)
-{
+static int8_t IR_read(uint8_t *address, uint8_t *command) {
 	if (!IR_rawdata)
 		return IR_ERROR;
 
@@ -183,14 +174,11 @@ IR_read(uint8_t *address, uint8_t *command)
 	return IR_SUCCESS;
 }
 
-ISR(INT0_vect)
-{
-
+ISR(INT0_vect) {
 	IR_process();
 }
 
-ISR(TIM0_COMPA_vect)
-{
+ISR(TIM0_COMPA_vect) {
 	/* When transmitting or receiving remote control codes using the NEC IR transmission protocol,
 	the communications performs optimally when the carrier frequency (used for modulation/demodulation)
  	is set to 38.222kHz. */
@@ -200,9 +188,7 @@ ISR(TIM0_COMPA_vect)
 		IR_event = IR_EVENT_IDLE;
 }
 
-int
-main(void)
-{
+int main(void) {
 	uint8_t addr, cmd;
 
 	/* setup */
@@ -212,26 +198,27 @@ main(void)
 	/* loop */
 	while (1) {
 		if (IR_read(&addr, &cmd) == IR_SUCCESS) {
-			if (addr != 0x01)
+			if (addr != 0x00)
 				continue;
 			switch(cmd) {
-			case 0x01:
-				PORTB &= ~(_BV(LED1_PIN)|_BV(LED2_PIN)|_BV(LED3_PIN)|_BV(LED4_PIN)); // turn all LEDs off
-				break;
-			case 0x00:
-				PORTB ^= _BV(LED1_PIN); // toggle LED1
-				break;
-			case 0x07:
-				PORTB ^= _BV(LED2_PIN); // toggle LED2
-				break;
-			case 0x06:
-                                PORTB ^= _BV(LED3_PIN); // toggle LED3
-                                break;
-			case 0x04:
-				PORTB ^= _BV(LED4_PIN); // toggle LED4
-                                break;
-			default:
-				break;
+				// 	params for china arduino-remote.
+				case 0x16:
+					PORTB &= ~(_BV(LED1_PIN)|_BV(LED2_PIN)|_BV(LED3_PIN)|_BV(LED4_PIN)); // turn all LEDs off (butt *)
+					break;
+				case 0x45:
+					PORTB ^= _BV(LED1_PIN); // toggle LED1 (rem button 1)
+					break;
+				case 0x46:
+					PORTB ^= _BV(LED2_PIN); // toggle LED2 (button 2)
+					break;
+				case 0x47:
+	        PORTB ^= _BV(LED3_PIN); // toggle LED3 (button 3)
+	        break;
+				case 0x44:
+					PORTB ^= _BV(LED4_PIN); // toggle LED4 (button 4)
+	        break;
+				default:
+					break;
 			};
 		}
 	}
