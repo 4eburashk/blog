@@ -10,7 +10,7 @@ CC=avr-gcc
 LD=avr-ld
 OBJCOPY=avr-objcopy
 SIZE=avr-size
-AVRDUDE=avrdude -C/etc/avrdude.conf -v
+AVRDUDE=avrdude -v -C/etc/avrdude.conf
 CFLAGS=-std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I. -DUART_BAUDRATE=115200
 TARGET=main
 
