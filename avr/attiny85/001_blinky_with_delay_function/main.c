@@ -7,7 +7,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define	LED_PIN	PB0
+#define	LED_PIN	PB2
 
 int
 main(void)

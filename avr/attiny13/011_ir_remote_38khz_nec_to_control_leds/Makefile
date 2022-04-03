@@ -1,6 +1,7 @@
-# --
-# Copyright (c) 2016, Lukasz Marcin Podkalicki <lukasz@podkalicki.com>
-# --
+#=========================================
+#	Edit by 4eburashk http://csn.net4me.net
+#		On Sun 18 Jul 2021 02:27:35 PM MSK
+#=========================================
 
 MCU=attiny13
 FUSE_L=0x7A
@@ -13,7 +14,6 @@ SIZE=avr-size
 AVRDUDE=avrdude -v -C/etc/avrdude.conf
 CFLAGS=-std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 TARGET=main
-
 SRCS = main.c
 	
 all:
@@ -31,3 +31,4 @@ fuse:
 clean:
 	rm -f *.c~ *.o *.elf *.hex
 
+# END
